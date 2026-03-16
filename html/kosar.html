@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Kosár</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#0f2a44;
+color:white;
+margin:0;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+padding:20px;
+background:#132d52;
+}
+
+nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+.container{
+padding:40px;
+}
+
+.item{
+background:#1c3a5c;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+}
+
+button{
+padding:10px 20px;
+background:#7edbff;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h2>OverClock</h2>
+
+<nav>
+<a href="index.html">Főoldal</a>
+<a href="kosar.html">Kosár 🛒</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<h1>Kosár</h1>
+
+<div id="kosar"></div>
+
+<br>
+
+<button onclick="vasarlas()">Vásárlás</button>
+
+</div>
+
+<script>
+
+let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
+
+let div=document.getElementById("kosar");
+
+kosar.forEach(t=>{
+
+div.innerHTML+=`
+<div class="item">
+${t.gyarto} ${t.model} - ${t.ar} Ft
+</div>
+`;
+
+});
+
+function vasarlas(){
+
+kosar.forEach(t=>{
+
+fetch("https://localhost:7024/api/termekek/"+t.id,{
+method:"DELETE"
+});
+
+});
+
+localStorage.removeItem("kosar");
+
+alert("Sikeres vásárlás!");
+
+location.href="index.html";
+
+}
+
+</script>
+
+</body>
+</html>

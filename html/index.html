@@ -2,112 +2,43 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OverClock Webshop</title>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI, sans-serif;
-}
-
 body{
-min-height:100vh;
-background:linear-gradient(135deg,#0b1c2e,#0f2a44,#132d52);
+font-family:Segoe UI;
+background:#0f2a44;
 color:white;
+margin:0;
 }
-
-/* GLASS EFFECT */
-
-.glass{
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(18px);
-border:1px solid rgba(255,255,255,0.15);
-border-radius:16px;
-box-shadow:0 10px 40px rgba(0,0,0,0.4);
-}
-
-/* HEADER */
 
 header{
 display:flex;
-align-items:center;
 justify-content:space-between;
-padding:15px 8%;
-margin:20px;
-}
-
-.logo-container{
-display:flex;
-align-items:center;
-gap:15px;
-}
-
-.logo-container img{
-height:60px;
-}
-
-.logo-text{
-font-size:22px;
-font-weight:bold;
-letter-spacing:1px;
+padding:20px;
+background:#132d52;
 }
 
 nav a{
-text-decoration:none;
 color:white;
-margin-left:25px;
-font-weight:500;
-opacity:0.9;
-transition:0.3s;
-}
-
-nav a:hover{
-opacity:1;
-transform:scale(1.05);
-}
-
-/* HERO */
-
-.hero{
-text-align:center;
-padding:60px 20px;
-margin:20px;
-}
-
-.hero h1{
-font-size:42px;
-margin-bottom:10px;
-}
-
-.hero p{
-opacity:0.8;
-}
-
-/* PRODUCTS */
-
-.container{
-width:85%;
-margin:auto;
-padding-top:30px;
+margin-left:20px;
+text-decoration:none;
 }
 
 .products{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:30px;
+padding:40px;
 }
 
 .product{
-overflow:hidden;
-transition:0.4s;
-}
-
-.product:hover{
-transform:translateY(-8px) scale(1.03);
+background:#1c3a5c;
+padding:15px;
+border-radius:10px;
+cursor:pointer;
+text-align:center;
 }
 
 .product img{
@@ -116,52 +47,10 @@ height:180px;
 object-fit:cover;
 }
 
-.product-content{
-padding:20px;
-text-align:center;
-}
-
-.product h3{
-margin-bottom:8px;
-}
-
-.product p{
-font-size:14px;
-opacity:0.8;
-margin-bottom:10px;
-}
-
 .price{
 font-size:20px;
-font-weight:bold;
-margin-bottom:12px;
 color:#7edbff;
-}
-
-button{
-background:linear-gradient(135deg,#00c6ff,#7b2cff);
-border:none;
-padding:10px 18px;
-border-radius:8px;
-color:white;
-cursor:pointer;
-font-weight:600;
-transition:0.3s;
-}
-
-button:hover{
-transform:scale(1.08);
-box-shadow:0 5px 20px rgba(0,200,255,0.5);
-}
-
-/* FOOTER */
-
-footer{
-text-align:center;
-padding:25px;
-margin:40px;
-font-size:14px;
-opacity:0.7;
+margin-top:10px;
 }
 
 </style>
@@ -169,115 +58,34 @@ opacity:0.7;
 
 <body>
 
-<header class="glass">
-
-<div class="logo-container">
-
-<img src="logo.png" alt="OverClock logo" srcset="">
-
-<div class="logo-text">OVER<span style="color:#7edbff">CLOCK</span></div>
-
-</div>
+<header>
+<h2>OverClock</h2>
 
 <nav>
-<a href="#">Főoldal</a>
-<a href="#">Termékek</a>
-<a href="#">Akciók</a>
-<a href="#">Kosár 🛒</a>
+<a href="index.html">Főoldal</a>
+<a href="kosar.html">Kosár 🛒</a>
 </nav>
 
 </header>
 
-<section class="hero glass">
-
-<h1>OverClock Webshop</h1>
-<p>Informatikai cikkek és hardverek</p>
-
-</section>
-
-<div class="container">
-
-<div class="products" id="products">
-
-<div class="product glass">
-<img src="airpods.png">
-<div class="product-content">
-<h3>Apple Airpods Pro 2</h3>
-<p>Bluetooth fülhallgató.</p>
-<div class="price">99 990 Ft</div>
-<button>Kosárba</button>
-</div>
-</div>
-
-<div class="product glass">
-<img src="monitor.png">
-<div class="product-content">
-<h3>Samsung Odyssey G5</h3>
-<p>Gaming monitor.</p>
-<div class="price">114 990 Ft</div>
-<button>Kosárba</button>
-</div>
-</div>
-
-<div class="product glass">
-<img src="ssd.png">
-<div class="product-content">
-<h3>Samsung T7 1TB</h3>
-<p>Külső SSD tároló.</p>
-<div class="price">42 500 Ft</div>
-<button>Kosárba</button>
-</div>
-</div>
-
-<div class="product glass">
-<img src="videokartya.png">
-<div class="product-content">
-<h3>Asus Geforce RTX 4060</h3>
-<p>Videókártya.</p>
-<div class="price">139 000 Ft</div>
-<button>Kosárba</button>
-</div>
-</div>
-
-<div class="product glass">
-<img src="wifi_router.png">
-<div class="product-content">
-<h3>TPlink Archer AX55</h3>
-<p>Gamer wifi router.</p>
-<div class="price">31 990 Ft</div>
-<button>Kosárba</button>
-</div>
-</div>
-
-</div>
-
-</div>
-
-<footer class="glass">
-© 2026 OverClock
-</footer>
-
-</body>
-</html>
+<div class="products" id="products"></div>
 
 <script>
-    fetch("https://localhost:7024/api/termekek")
-.then(response => response.json())
-.then(adatok => {
 
-let container = document.getElementById("products");
+fetch("https://localhost:7024/api/termekek")
+.then(res=>res.json())
+.then(data=>{
 
-adatok.forEach(t => {
+let container=document.getElementById("products");
 
-container.innerHTML += `
-<div class="product glass">
+data.forEach(t=>{
+
+container.innerHTML+=`
+<div class="product" onclick="termek(${t.id})">
 <img src="${t.kep}">
-<div class="product-content">
 <h3>${t.gyarto} ${t.model}</h3>
-<p>${t.leiras}</p>
+<p>${t.tipus}</p>
 <div class="price">${t.ar} Ft</div>
-<button>Kosárba</button>
-</div>
 </div>
 `;
 
@@ -285,5 +93,13 @@ container.innerHTML += `
 
 });
 
+function termek(id){
+
+location.href="termek.html?id="+id;
+
+}
+
 </script>
-</script>
+
+</body>
+</html>
