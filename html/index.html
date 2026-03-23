@@ -2,58 +2,10 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>OverClock Webshop</title>
+<title>Webshop</title>
+<link rel="stylesheet" href="style.css">
 
-<style>
-
-body{
-font-family:Segoe UI;
-background:#0f2a44;
-color:white;
-margin:0;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-padding:20px;
-background:#132d52;
-}
-
-nav a{
-color:white;
-margin-left:20px;
-text-decoration:none;
-}
-
-.products{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
-padding:40px;
-}
-
-.product{
-background:#1c3a5c;
-padding:15px;
-border-radius:10px;
-cursor:pointer;
-text-align:center;
-}
-
-.product img{
-width:100%;
-height:180px;
-object-fit:cover;
-}
-
-.price{
-font-size:20px;
-color:#7edbff;
-margin-top:10px;
-}
-
-</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -63,17 +15,22 @@ margin-top:10px;
 
 <nav>
 <a href="index.html">Főoldal</a>
-<a href="kosar.html">Kosár 🛒</a>
+<a href="kosar.html">Kosár 🛒 <span id="badge">0</span></a>
 </nav>
-
 </header>
 
 <div class="products" id="products"></div>
 
 <script>
 
+function updateBadge(){
+let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
+document.getElementById("badge").innerText=kosar.length;
+}
+updateBadge();
+
 fetch("https://localhost:7024/api/termekek")
-.then(res=>res.json())
+.then(r=>r.json())
 .then(data=>{
 
 let container=document.getElementById("products");
@@ -85,7 +42,8 @@ container.innerHTML+=`
 <img src="${t.kep}">
 <h3>${t.gyarto} ${t.model}</h3>
 <p>${t.tipus}</p>
-<div class="price">${t.ar} Ft</div>
+<p>${t.ar} Ft</p>
+<button class="add-to-cart-btn">Kosárba</button>
 </div>
 `;
 
@@ -94,9 +52,7 @@ container.innerHTML+=`
 });
 
 function termek(id){
-
 location.href="termek.html?id="+id;
-
 }
 
 </script>

@@ -3,64 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <title>Kosár</title>
-
-<style>
-
-body{
-font-family:Segoe UI;
-background:#0f2a44;
-color:white;
-margin:0;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-padding:20px;
-background:#132d52;
-}
-
-nav a{
-color:white;
-margin-left:20px;
-text-decoration:none;
-}
-
-.container{
-padding:40px;
-}
-
-.item{
-background:#1c3a5c;
-padding:15px;
-margin-bottom:15px;
-border-radius:10px;
-}
-
-button{
-padding:10px 20px;
-background:#7edbff;
-border:none;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 
 <body>
 
 <header>
-
 <h2>OverClock</h2>
-
 <nav>
 <a href="index.html">Főoldal</a>
-<a href="kosar.html">Kosár 🛒</a>
+<a href="kosar.html">Kosár 🛒 <span id="badge">0</span></a>
 </nav>
-
 </header>
 
 <div class="container">
@@ -69,37 +24,102 @@ cursor:pointer;
 
 <div id="kosar"></div>
 
-<br>
+<h2>Adatok</h2>
 
-<button onclick="vasarlas()">Vásárlás</button>
+<input id="nev" placeholder="Név">
+<input id="cim" placeholder="Lakcím">
+<input id="email" placeholder="Email">
+
+<button onclick="vasarlas()">Vásárlás + PDF</button>
 
 </div>
 
 <script>
 
+function updateBadge(){
+let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
+document.getElementById("badge").innerText=kosar.length;
+}
+updateBadge();
+
 let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
 
-let div=document.getElementById("kosar");
+function render(){
 
-kosar.forEach(t=>{
+let div=document.getElementById("kosar");
+div.innerHTML="";
+
+kosar.forEach((t,i)=>{
 
 div.innerHTML+=`
 <div class="item">
 ${t.gyarto} ${t.model} - ${t.ar} Ft
+<button onclick="torol(${i})">❌</button>
 </div>
 `;
 
 });
 
+}
+
+render();
+
+function torol(index){
+
+let torolt=kosar[index];
+
+fetch("https://localhost:7024/api/termekek/"+torolt.id,{
+method:"POST"
+});
+
+kosar.splice(index,1);
+localStorage.setItem("kosar",JSON.stringify(kosar));
+
+render();
+updateBadge();
+
+}
+
 function vasarlas(){
 
+let nev=document.getElementById("nev").value;
+let cim=document.getElementById("cim").value;
+let email=document.getElementById("email").value;
+
+if(!nev || !cim || !email){
+alert("Tölts ki minden mezőt!");
+return;
+}
+
+let osszeg=0;
+
 kosar.forEach(t=>{
+osszeg+=t.ar;
 
 fetch("https://localhost:7024/api/termekek/"+t.id,{
 method:"DELETE"
 });
 
 });
+
+const { jsPDF } = window.jspdf;
+let doc=new jsPDF();
+
+doc.text("Vásárlás",10,10);
+doc.text("Név: "+nev,10,20);
+doc.text("Cím: "+cim,10,30);
+doc.text("Email: "+email,10,40);
+
+let y=50;
+
+kosar.forEach(t=>{
+doc.text(t.gyarto+" "+t.model+" - "+t.ar+" Ft",10,y);
+y+=10;
+});
+
+doc.text("Összesen: "+osszeg+" Ft",10,y+10);
+
+doc.save("vasarlas.pdf");
 
 localStorage.removeItem("kosar");
 

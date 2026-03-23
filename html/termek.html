@@ -3,94 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <title>Termék</title>
-
-<style>
-
-body{
-font-family:Segoe UI;
-background:#0f2a44;
-color:white;
-margin:0;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-padding:20px;
-background:#132d52;
-}
-
-nav a{
-color:white;
-margin-left:20px;
-text-decoration:none;
-}
-
-.container{
-padding:40px;
-text-align:center;
-}
-
-img{
-width:300px;
-}
-
-button{
-padding:10px 20px;
-background:#7edbff;
-border:none;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
-margin-top:20px;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 
 <body>
 
 <header>
-
 <h2>OverClock</h2>
-
 <nav>
 <a href="index.html">Főoldal</a>
-<a href="kosar.html">Kosár 🛒</a>
+<a href="kosar.html">Kosár 🛒 <span id="badge">0</span></a>
 </nav>
-
 </header>
 
 <div class="container">
-
 <div id="termek"></div>
-
 <button onclick="kosarba()">Kosárba</button>
-
 </div>
 
 <script>
+
+function updateBadge(){
+let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
+document.getElementById("badge").innerText=kosar.length;
+}
+updateBadge();
 
 const params=new URLSearchParams(window.location.search);
 const id=params.get("id");
 
 fetch("https://localhost:7024/api/termekek/"+id)
-.then(res=>res.json())
+.then(r=>r.json())
 .then(t=>{
 
 document.getElementById("termek").innerHTML=`
-
 <h1>${t.gyarto} ${t.model}</h1>
-
-<img src="${t.kep}">
-
+<img src="${t.kep}" width="300">
 <p>${t.leiras}</p>
-
-<p><b>${t.tech}</b></p>
-
+<p>${t.tech}</p>
 <h2>${t.ar} Ft</h2>
-
 `;
 
 window.termek=t;
@@ -100,10 +53,10 @@ window.termek=t;
 function kosarba(){
 
 let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
-
 kosar.push(window.termek);
-
 localStorage.setItem("kosar",JSON.stringify(kosar));
+
+updateBadge();
 
 alert("Kosárba téve!");
 
