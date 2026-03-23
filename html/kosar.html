@@ -1,135 +1,248 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8">
-<title>Kosár</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Kosár - OverClock</title>
 
-</head>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    </head>
 <body>
 
-<header>
-<h2>OverClock</h2>
-<nav>
-<a href="index.html">Főoldal</a>
-<a href="kosar.html">Kosár 🛒 <span id="badge">0</span></a>
-</nav>
-</header>
+    <header>
+        <h2>OverClock</h2>
+        <nav>
+            <a href="index.html">Főoldal</a>
+            <a href="kosar.html">Kosár 🛒 <span id="badge">0</span></a>
+        </nav>
+    </header>
 
-<div class="container">
+    <div class="container">
+        <h2>A te kosarad</h2>
+        <div id="kosar"></div>
 
-<h1>Kosár</h1>
+        <h2 style="margin-top: 50px;">Vásárlási adatok</h2>
+        <input type="text" id="nev" placeholder="Teljes név">
+        <input type="text" id="cim" placeholder="Szállítási cím">
+        <input type="email" id="email" placeholder="E-mail cím">
+        
+        <button class="vasarlas-btn" onclick="vasarlas()">Vásárlás és Számla letöltése</button>
+    </div>
 
-<div id="kosar"></div>
+    <script>
+        // 1. Badge frissítése
+        function updateBadge() {
+            let kosar = JSON.parse(localStorage.getItem("kosar")) || [];
+            let badge = document.getElementById("badge");
+            if(badge) badge.innerText = kosar.length;
+        }
+        updateBadge();
 
-<h2>Adatok</h2>
+        let kosar = JSON.parse(localStorage.getItem("kosar")) || [];
 
-<input id="nev" placeholder="Név">
-<input id="cim" placeholder="Lakcím">
-<input id="email" placeholder="Email">
+        // 2. Kosár renderelése + Végösszeg megjelenítése
+        function render() {
+            let div = document.getElementById("kosar");
+            if(!div) return; 
+            
+            div.innerHTML = "";
+            let osszeg = 0;
 
-<button onclick="vasarlas()">Vásárlás + PDF</button>
+            kosar.forEach((t, i) => {
+                osszeg += t.ar;
+                div.innerHTML += `
+                <div class="item">
+                    <span>${t.gyarto} ${t.model}</span> 
+                    <span><span style="color: #00b4d8; margin-right: 20px;">${t.ar} Ft</span> 
+                    <button onclick="torol(${i})">❌ Törlés</button></span>
+                </div>
+                `;
+            });
 
-</div>
+            // Végösszeg mutató létrehozása vagy frissítése
+            let vegosszegDiv = document.getElementById("vegosszeg-mutato");
+            if (!vegosszegDiv) {
+                vegosszegDiv = document.createElement("div");
+                vegosszegDiv.id = "vegosszeg-mutato";
+                vegosszegDiv.style.fontSize = "22px";
+                vegosszegDiv.style.fontWeight = "800";
+                vegosszegDiv.style.color = "#ffffff";
+                vegosszegDiv.style.marginTop = "30px";
+                vegosszegDiv.style.textAlign = "right";
+                vegosszegDiv.style.letterSpacing = "1px";
+                div.parentNode.insertBefore(vegosszegDiv, div.nextSibling);
+            }
+            
+            if(kosar.length > 0) {
+                vegosszegDiv.innerHTML = `Végösszeg: <span style="color: #9d4edd;">${osszeg} Ft</span>`;
+            } else {
+                vegosszegDiv.innerHTML = `A kosarad üres.`;
+            }
+        }
 
-<script>
+        render();
 
-function updateBadge(){
-let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
-document.getElementById("badge").innerText=kosar.length;
-}
-updateBadge();
+        // 3. Törlés a kosárból
+        function torol(index) {
+            let torolt = kosar[index];
+            
+            // API hívás szimulálása a termék visszahelyezésére
+            if(torolt && torolt.id) {
+                fetch("https://localhost:7213/api/termekek/" + torolt.id, {
+                    method: "POST"
+                }).catch(err => console.log("API hiba:", err));
+            }
 
-let kosar=JSON.parse(localStorage.getItem("kosar"))||[];
+            kosar.splice(index, 1);
+            localStorage.setItem("kosar", JSON.stringify(kosar));
 
-function render(){
+            render();
+            updateBadge();
+        }
 
-let div=document.getElementById("kosar");
-div.innerHTML="";
+        // 4. Vásárlás feldolgozása és a PDF generálása
+        async function vasarlas() {
+            let nev = document.getElementById("nev").value;
+            let cim = document.getElementById("cim").value;
+            let email = document.getElementById("email").value;
 
-kosar.forEach((t,i)=>{
+            if (!nev || !cim || !email) {
+                alert("Kérlek, tölts ki minden mezőt!");
+                return;
+            }
 
-div.innerHTML+=`
-<div class="item">
-${t.gyarto} ${t.model} - ${t.ar} Ft
-<button onclick="torol(${i})">❌</button>
-</div>
-`;
+            if (kosar.length === 0) {
+                alert("A kosarad üres!");
+                return;
+            }
 
-});
+            let osszeg = kosar.reduce((sum, t) => sum + t.ar, 0);
 
-}
+            // API hívások beküldése
+            kosar.forEach(t => {
+                fetch("https://localhost:7024/api/Peldak", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(t)
+                }).catch(err => console.log(err));
+            });
 
-render();
+            // --- PDF GENERÁLÁS (Design implementáció) ---
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-function torol(index){
+            const darkBg = [18, 27, 43];     // #121b2b
+            const cyan = [0, 180, 216];      // #00b4d8
+            const purple = [157, 78, 221];   // #9d4edd
 
-let torolt=kosar[index];
+            // Fejléc dizájn
+            doc.setFillColor(...darkBg);
+            doc.rect(0, 0, 210, 40, "F");
 
-fetch("https://localhost:7024/api/termekek/"+torolt.id,{
-method:"POST"
-});
+            // Logó betöltése aszinkron módon
+            try {
+                const logoImg = new Image();
+                logoImg.src = 'logo.jpg';
+                await new Promise((resolve) => {
+                    logoImg.onload = resolve;
+                    logoImg.onerror = resolve;
+                });
+                doc.addImage(logoImg, 'JPEG', 15, 8, 24, 24);
+            } catch (e) {
+                console.warn("Logó betöltése a PDF-hez sikertelen.");
+            }
 
-kosar.splice(index,1);
-localStorage.setItem("kosar",JSON.stringify(kosar));
+            // Cégnév a fejlécben
+            doc.setTextColor(...cyan);
+            doc.setFontSize(26);
+            doc.setFont("helvetica", "bold");
+            doc.text("OVERCLOCK", 45, 22);
+            
+            doc.setTextColor(200, 200, 200);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("Informatikai Cikkek es Hardverek", 45, 29);
 
-render();
-updateBadge();
+            // Vonal a fejléc alatt
+            doc.setDrawColor(...purple);
+            doc.setLineWidth(1);
+            doc.line(10, 45, 200, 45);
 
-}
+            // Szekciók címei
+            doc.setTextColor(30, 30, 30);
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("Vásárolt termékek:", 15, 60);
+            doc.text("Vásárló adatai:", 120, 60);
 
-function vasarlas(){
+            // Vásárló adatai (Jobb oldal)
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(80, 80, 80);
+            doc.text(`Név: ${nev}`, 120, 70);
+            doc.text(`Cím: ${cim}`, 120, 77);
+            doc.text(`Email: ${email}`, 120, 84);
+            
+            // Elválasztó vonal
+            doc.setDrawColor(200, 200, 200);
+            doc.setLineWidth(0.5);
+            doc.line(115, 62, 115, 100);
 
-let nev=document.getElementById("nev").value;
-let cim=document.getElementById("cim").value;
-let email=document.getElementById("email").value;
+            // Vásárolt termékek listázása (Bal oldal)
+            let startY = 70;
+            doc.setTextColor(50, 50, 50);
+            
+            kosar.forEach((t, i) => {
+                if (startY > 250) {
+                    doc.addPage();
+                    startY = 20;
+                }
+                
+                doc.setFont("helvetica", "bold");
+                doc.text(`${i + 1}. ${t.gyarto} ${t.model}`, 15, startY);
+                
+                doc.setFont("helvetica", "normal");
+                doc.text(`${t.ar} Ft`, 105, startY, { align: "right" });
+                
+                startY += 8;
+            });
 
-if(!nev || !cim || !email){
-alert("Tölts ki minden mezőt!");
-return;
-}
+            // Végösszeg kiemelése
+            let summaryY = startY + 10;
+            doc.setDrawColor(...cyan);
+            doc.setLineWidth(0.5);
+            doc.line(15, summaryY - 5, 105, summaryY - 5);
 
-let osszeg=0;
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(...cyan); 
+            doc.text("Végösszeg:", 15, summaryY);
+            
+            doc.setTextColor(...purple); 
+            doc.text(`${osszeg} Ft`, 105, summaryY, { align: "right" });
 
-kosar.forEach(t=>{
-osszeg+=t.ar;
+            // Footer (Lábléc)
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "italic");
+            doc.setTextColor(150, 150, 150);
+            doc.text("Köszönjük a vásárlást! - OverClock Webshop", 105, 285, { align: "center" });
 
-fetch("https://localhost:7024/api/termekek/"+t.id,{
-method:"DELETE"
-});
+            // Dokumentum mentése
+            doc.save("OverClock_Szamla.pdf");
 
-});
-
-const { jsPDF } = window.jspdf;
-let doc=new jsPDF();
-
-doc.text("Vásárlás",10,10);
-doc.text("Név: "+nev,10,20);
-doc.text("Cím: "+cim,10,30);
-doc.text("Email: "+email,10,40);
-
-let y=50;
-
-kosar.forEach(t=>{
-doc.text(t.gyarto+" "+t.model+" - "+t.ar+" Ft",10,y);
-y+=10;
-});
-
-doc.text("Összesen: "+osszeg+" Ft",10,y+10);
-
-doc.save("vasarlas.pdf");
-
-localStorage.removeItem("kosar");
-
-alert("Sikeres vásárlás!");
-
-location.href="index.html";
-
-}
-
-</script>
-
+            // Kosár ürítése sikeres tranzakció után
+            kosar = [];
+            localStorage.removeItem("kosar");
+            render();
+            updateBadge();
+            
+            alert("Sikeres vásárlás! A számla letöltése megkezdődött.");
+            
+            // Opcionális: mezők kiürítése
+            document.getElementById("nev").value = "";
+            document.getElementById("cim").value = "";
+            document.getElementById("email").value = "";
+        }
+    </script>
 </body>
 </html>
