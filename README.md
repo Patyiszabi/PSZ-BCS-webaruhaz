@@ -25,7 +25,7 @@ Az OverClock egy teljes értékű, felhőben hosztolt hardver webáruház, amely
 
 🌐 Élő Elérhetőségek
 
-    Frontend	Netlify:
+    Frontend Netlify:
     overclockwebshop.netlify.app
 
     Backend API	Render	
