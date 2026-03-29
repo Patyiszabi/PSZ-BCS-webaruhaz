@@ -2,96 +2,75 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kosár - OverClock</title>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    </head>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
-    <header>
-        <h2>OverClock</h2>
+    <header id="navbar">
+        <h2><img src="/html/images/logo.png" alt="Logo" onerror="this.style.display='none'"> OVERCLOCK</h2>
         <nav>
             <a href="index.html">Főoldal</a>
             <a href="kosar.html">Kosár 🛒 <span id="badge">0</span></a>
         </nav>
     </header>
 
-    <div class="container">
-        <h2>A te kosarad</h2>
+    <div class="basket-container">
+        <h2 class="basket-title">A te kosarad</h2>
         <div id="kosar"></div>
 
-        <h2 style="margin-top: 50px;">Vásárlási adatok</h2>
-        <input type="text" id="nev" placeholder="Teljes név">
-        <input type="text" id="cim" placeholder="Szállítási cím">
-        <input type="email" id="email" placeholder="E-mail cím">
+        <div class="total-price-container" id="vegosszeg-mutato">
+            Végösszeg: <span class="total-price">0 Ft</span>
+        </div>
+
+        <h2 class="basket-title">Vásárlási adatok</h2>
+        <input type="text" id="nev" class="basket-input" placeholder="Teljes név">
+        <input type="text" id="cim" class="basket-input" placeholder="Szállítási cím">
+        <input type="email" id="email" class="basket-input" placeholder="E-mail cím">
         
-        <button class="vasarlas-btn" onclick="vasarlas()">Vásárlás és Számla letöltése</button>
+        <button class="checkout-btn" onclick="vasarlas()">VÁSÁRLÁS ÉS SZÁMLA LETÖLTÉSE</button>
     </div>
 
     <script>
-        // 1. Badge frissítése
         function updateBadge() {
             let kosar = JSON.parse(localStorage.getItem("kosar")) || [];
-            let badge = document.getElementById("badge");
-            if(badge) badge.innerText = kosar.length;
+            document.getElementById("badge").innerText = kosar.length;
         }
         updateBadge();
 
         let kosar = JSON.parse(localStorage.getItem("kosar")) || [];
 
-        // 2. Kosár renderelése + Végösszeg megjelenítése
         function render() {
             let div = document.getElementById("kosar");
-            if(!div) return; 
-            
             div.innerHTML = "";
             let osszeg = 0;
 
             kosar.forEach((t, i) => {
                 osszeg += t.ar;
                 div.innerHTML += `
-                <div class="item">
-                    <span>${t.gyarto} ${t.model}</span> 
-                    <span><span style="color: #00b4d8; margin-right: 20px;">${t.ar} Ft</span> 
-                    <button onclick="torol(${i})">❌ Törlés</button></span>
+                <div class="basket-item">
+                    <span class="basket-item-info">${t.gyarto} ${t.model}</span>
+                    <div class="basket-item-right">
+                        <span class="basket-item-price">${t.ar} Ft</span>
+                        <button class="delete-btn" onclick="torol(${i})">✕ TÖRLÉS</button>
+                    </div>
                 </div>
                 `;
             });
 
-            // Végösszeg mutató létrehozása vagy frissítése
-            let vegosszegDiv = document.getElementById("vegosszeg-mutato");
-            if (!vegosszegDiv) {
-                vegosszegDiv = document.createElement("div");
-                vegosszegDiv.id = "vegosszeg-mutato";
-                vegosszegDiv.style.fontSize = "22px";
-                vegosszegDiv.style.fontWeight = "800";
-                vegosszegDiv.style.color = "#ffffff";
-                vegosszegDiv.style.marginTop = "30px";
-                vegosszegDiv.style.textAlign = "right";
-                vegosszegDiv.style.letterSpacing = "1px";
-                div.parentNode.insertBefore(vegosszegDiv, div.nextSibling);
-            }
-            
-            if(kosar.length > 0) {
-                vegosszegDiv.innerHTML = `Végösszeg: <span style="color: #9d4edd;">${osszeg} Ft</span>`;
-            } else {
-                vegosszegDiv.innerHTML = `A kosarad üres.`;
-            }
+            document.getElementById("vegosszeg-mutato").innerHTML = `Végösszeg: <span class="total-price">${osszeg} Ft</span>`;
         }
 
         render();
 
-        // 3. Törlés a kosárból
+        // A TE EREDETI LOGIKÁD
         function torol(index) {
             let torolt = kosar[index];
-            
-            // API hívás szimulálása a termék visszahelyezésére
-            if(torolt && torolt.id) {
-                fetch("https://localhost:7213/api/termekek/" + torolt.id, {
-                    method: "POST"
-                }).catch(err => console.log("API hiba:", err));
-            }
+            fetch("https://localhost:7024/api/termekek/" + torolt.id, {
+                method: "POST" 
+            }).catch(e => console.log(e));
 
             kosar.splice(index, 1);
             localStorage.setItem("kosar", JSON.stringify(kosar));
@@ -100,7 +79,6 @@
             updateBadge();
         }
 
-        // 4. Vásárlás feldolgozása és a PDF generálása
         async function vasarlas() {
             let nev = document.getElementById("nev").value;
             let cim = document.getElementById("cim").value;
@@ -119,13 +97,11 @@
             let osszeg = kosar.reduce((sum, t) => sum + t.ar, 0);
 
             // API hívások beküldése
-            kosar.forEach(t => {
-                fetch("https://localhost:7024/api/Peldak", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(t)
-                }).catch(err => console.log(err));
-            });
+            await Promise.all(kosar.map(t =>
+                fetch("https://localhost:7024/api/termekek/" + t.id, {
+                method: "DELETE"
+                }).catch(e => console.log(e))
+            ));
 
             // --- PDF GENERÁLÁS (Design implementáció) ---
             const { jsPDF } = window.jspdf;
@@ -142,7 +118,7 @@
             // Logó betöltése aszinkron módon
             try {
                 const logoImg = new Image();
-                logoImg.src = 'logo.jpg';
+                logoImg.src = '/html/images/logo.png';
                 await new Promise((resolve) => {
                     logoImg.onload = resolve;
                     logoImg.onerror = resolve;
@@ -242,6 +218,59 @@
             document.getElementById("nev").value = "";
             document.getElementById("cim").value = "";
             document.getElementById("email").value = "";
+        }
+    </script>
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color: #f09433;" />
+                <stop offset="25%" style="stop-color: #e6683c;" />
+                <stop offset="50%" style="stop-color: #dc2743;" />
+                <stop offset="75%" style="stop-color: #cc2366;" />
+                <stop offset="100%" style="stop-color: #bc1888;" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="custom-footer">
+        <p>Készítette: Barna Csaba és Patyi Szabolcs</p>
+        <div class="social-icons">
+            
+            <a href="https://github.com/Patyiszabi/PSZ-BCS-webaruhaz.git" target="_blank" class="github-icon" title="Projekt GitHub Repository">
+                <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            
+            <a href="https://www.instagram.com/prod.bycsabi/" target="_blank" class="ig-icon" title="Barna Csaba Instagram">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            
+            <a href="https://www.instagram.com/patyiszabi1/" target="_blank" class="ig-icon" title="Patyi Szabolcs Instagram">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+        </div>
+    </div>
+    <script>
+        if (typeof gsap !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Intelligens trigger: A főoldalon a "#products-section" (Legújabb hardverek h2 konténere) lesz a kiindulópont.
+            // A kosár és termék oldalakon a saját fő tartalmuk.
+            let triggerElement = document.querySelector("#products-section") || 
+                                 document.querySelector(".basket-container") || 
+                                 document.querySelector(".single-product-container");
+
+            gsap.from(".social-icons a", {
+                scrollTrigger: {
+                    trigger: triggerElement,
+                    start: "top top",      // CSAK AKKOR INDUL, amikor a "Legújabb hardverek" eléri az ablak tetejét!
+                    end: "+=300",          // 300px görgetés alatt zajlik le
+                    scrub: 1
+                },
+                y: -40,
+                opacity: 0,
+                stagger: 0.33,
+                ease: "power2.out"
+            });
         }
     </script>
 </body>
