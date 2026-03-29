@@ -1,5 +1,5 @@
 <div align="center" style="background: linear-gradient(90deg, #ff00ff, #00ffff); padding: 25px; border-radius: 20px; margin-bottom: 25px;">
-  <img src="images/logo-glow.gif" width="70" height="70" valign="middle" style="vertical-align:middle;"/>
+  <img src="/html/images/logo.png" width="70" height="70" valign="middle" style="vertical-align:middle;"/>
   <h1 style="display:inline-block; color:#ffffff; margin-left:20px; font-family:'Courier New', monospace; text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;">OverClock</h1>
   <p style="color:#00ffff; font-family:'Courier New', monospace; margin-top:5px; text-shadow: 0 0 5px #ff00ff;">Premium Hardware Webshop</p>
   <div style="margin-top:15px;">
