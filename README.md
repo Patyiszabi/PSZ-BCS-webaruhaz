@@ -56,6 +56,8 @@ MySQL Connector
 📦 Valós Idejű Készletkezelés – megvásárolt termék azonnali eltávolítása
 🧾 Dinamikus PDF Számla – márkázott, egyedi azonosítókkal
 🎨 Modern UI/UX – cyberpunk esztétika, neon gradiensek, sötét mód, ScrollTrigger animációk
+
+
 📂 Projekt Felépítése
 ├── Controllers/        # Backend végpontok (GET, DELETE)
 ├── images/             # Grafikai elemek, termékfotók
@@ -63,10 +65,11 @@ MySQL Connector
 ├── termek.html         # Termékadatlapok
 ├── kosar.html          # Kosár logika + PDF generátor
 └── style.css           # Cyberpunk/Dark téma + reszponzivitás
+
+
 👥 Fejlesztők
 Barna Csaba
 Patyi Szabolcs
 
-Repository: PSZ-BCS-webaruhaz
 
 Repository: PSZ-BCS-webaruhaz
