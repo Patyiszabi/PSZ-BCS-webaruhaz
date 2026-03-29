@@ -33,45 +33,49 @@ Adatbázis	Clever Cloud Managed MySQL	Távoli hozzáféréssel
 
 🚀 Technológiai Stack
 
-Cloud & Infrastructure
+  Cloud & Infrastructure
 
-⚡ Netlify – villámgyors frontend hoszting
-🖥️ Render – megbízható C# ASP.NET Core Web API
-☁️ Clever Cloud – skálázható MySQL adatbázis
+      ⚡ Netlify – villámgyors frontend hoszting
+      🖥️ Render – megbízható C# ASP.NET Core Web API
+      ☁️ Clever Cloud – skálázható MySQL adatbázis
 
-Frontend
+  Frontend
 
-HTML5, CSS3 (Cyberpunk neon gradiensek)
-JavaScript (ES6+), GSAP ScrollTrigger animációk
-jsPDF – kliens oldali PDF számlagenerálás
+      HTML5, CSS3 (Cyberpunk neon gradiensek)
+      JavaScript (ES6+), GSAP ScrollTrigger animációk
+      jsPDF – kliens oldali PDF számlagenerálás
 
-Backend
+  Backend
 
-C# / ASP.NET Core
-Dapper (Micro-ORM)
-MySQL Connector
+      C# / ASP.NET Core
+      Dapper (Micro-ORM)
+      MySQL Connector
 
 
 🛠️ Főbb Funkciók
-⚡ Élő Adatbázis Kapcsolat – minden betöltéskor frissülő terméklista
-📦 Valós Idejű Készletkezelés – megvásárolt termék azonnali eltávolítása
-🧾 Dinamikus PDF Számla – márkázott, egyedi azonosítókkal
-🎨 Modern UI/UX – cyberpunk esztétika, neon gradiensek, sötét mód, ScrollTrigger animációk
+      ⚡ Élő Adatbázis Kapcsolat – minden betöltéskor frissülő terméklista
+      📦 Valós Idejű Készletkezelés – megvásárolt termék azonnali eltávolítása
+      🧾 Dinamikus PDF Számla – márkázott, egyedi azonosítókkal
+      🎨 Modern UI/UX – cyberpunk esztétika, neon gradiensek, sötét mód, ScrollTrigger animációk
 
 
 📂 Projekt Felépítése
 ├── Controllers/        # Backend végpontok (GET, DELETE)
+
 ├── images/             # Grafikai elemek, termékfotók
+
 ├── index.html          # Főoldal + dinamikus termékkatalógus
+
 ├── termek.html         # Termékadatlapok
+
 ├── kosar.html          # Kosár logika + PDF generátor
+
 └── style.css           # Cyberpunk/Dark téma + reszponzivitás
 
 
 👥 Fejlesztők
 
 Barna Csaba
-
 Patyi Szabolcs
 
 
