@@ -49,7 +49,7 @@
         }
 
         // API call
-        fetch("https://localhost:7024/api/termekek")
+        fetch("https://webshop-backend-api.onrender.com/api/termekek")
         .then(r => r.json())
         .then(adatok => {
             let container = document.getElementById("products");
@@ -71,12 +71,16 @@
                 `;
             });
 
-            initGSAP();
+            window.addEventListener("load", () => {
+                initGSAP();
+            });
         })
         .catch(err => console.log("Hiba a termékek betöltésekor:", err));
 
         // GSAP
         function initGSAP() {
+
+            if (typeof gsap === 'undefined') return;
             gsap.registerPlugin(ScrollTrigger);
 
             // Page load

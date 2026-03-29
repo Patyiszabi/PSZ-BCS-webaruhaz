@@ -29,7 +29,7 @@
         const id = params.get("id");
 
         // API call
-        fetch("https://localhost:7024/api/termekek/" + id)
+        fetch("https://webshop-backend-api.onrender.com/api/termekek" + id)
         .then(r => r.json())
         .then(t => {
             // Error handling

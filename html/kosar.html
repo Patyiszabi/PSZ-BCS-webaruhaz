@@ -96,7 +96,7 @@
             let osszeg = kosar.reduce((sum, t) => sum + t.ar, 0);
 
             await Promise.all(kosar.map(t =>
-                fetch("https://localhost:7024/api/termekek/" + t.id, {
+                fetch("https://webshop-backend-api.onrender.com/api/termekek" + t.id, {
                 method: "DELETE"
                 }).catch(e => console.log(e))
             ));
