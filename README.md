@@ -54,8 +54,11 @@ Adatbázis	Clever Cloud Managed MySQL	Távoli hozzáféréssel
 
 🛠️ Főbb Funkciók
       ⚡ Élő Adatbázis Kapcsolat – minden betöltéskor frissülő terméklista
+      
       📦 Valós Idejű Készletkezelés – megvásárolt termék azonnali eltávolítása
+      
       🧾 Dinamikus PDF Számla – márkázott, egyedi azonosítókkal
+      
       🎨 Modern UI/UX – cyberpunk esztétika, neon gradiensek, sötét mód, ScrollTrigger animációk
 
 
