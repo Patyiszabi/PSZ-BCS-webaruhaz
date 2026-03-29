@@ -1,6 +1,6 @@
 💻 OverClock Webshop - Live Project
 Az OverClock egy teljes értékű, felhőben hosztolt hardver webáruház. A projekt bemutatja a modern webes technológiák integrációját: egyedi dizájn, aszinkron API kommunikáció és automatizált számlagenerálás.
-
+Habár lokálisan is futtatható lehetne, szerettünk volna kicsit "feltúrbózni" a projektet azzal, hogy hostoljuk a frontendet, backendet és az adatbázist is.
 🌐 Elérhetőség
 Weboldal (Frontend): https://overclockwebshop.netlify.app
 
@@ -29,7 +29,7 @@ Valós Idejű Készletkezelés: A DELETE metódus implementálásával a megvás
 
 Dinamikus PDF Számla: A vásárlás gomb megnyomásakor a rendszer a megadott adatok alapján azonnal legenerál egy márkázott számlát.
 
-Modern UI/UX: Neon esztétika, sötét mód és reszponzív elrendezés minden eszközre.
+Modern UI/UX: Neon esztétika gradienteket használva, sötét mód, animációk ahogyan a felhasználó görget és reszponzív elrendezés minden eszközre.
 
 📂 Projekt Felépítése
 /Controllers - A backend végpontok (GET, DELETE) kezelése.
@@ -37,6 +37,8 @@ Modern UI/UX: Neon esztétika, sötét mód és reszponzív elrendezés minden e
 /images - A webshop grafikai elemei és termékfotói.
 
 index.html - A főoldal és a termékkatalógus.
+
+termek.hmtl - Egyes termékek kattintásakor jelenik meg, így több információt kaphatunk az adott termékről.
 
 kosar.html - A kosár logika, a vásárlási folyamat és a PDF generátor.
 
