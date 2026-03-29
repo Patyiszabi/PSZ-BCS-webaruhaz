@@ -65,7 +65,6 @@
 
         render();
 
-        // A TE EREDETI LOGIKÁD
         function torol(index) {
             let torolt = kosar[index];
             fetch("https://localhost:7024/api/termekek/" + torolt.id, {
@@ -96,26 +95,25 @@
 
             let osszeg = kosar.reduce((sum, t) => sum + t.ar, 0);
 
-            // API hívások beküldése
             await Promise.all(kosar.map(t =>
                 fetch("https://localhost:7024/api/termekek/" + t.id, {
                 method: "DELETE"
                 }).catch(e => console.log(e))
             ));
 
-            // --- PDF GENERÁLÁS (Design implementáció) ---
+            //PDF
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            const darkBg = [18, 27, 43];     // #121b2b
-            const cyan = [0, 180, 216];      // #00b4d8
-            const purple = [157, 78, 221];   // #9d4edd
+            const darkBg = [18, 27, 43];
+            const cyan = [0, 180, 216];
+            const purple = [157, 78, 221];
 
-            // Fejléc dizájn
+            // Fejlec
             doc.setFillColor(...darkBg);
             doc.rect(0, 0, 210, 40, "F");
 
-            // Logó betöltése aszinkron módon
+            // Logo
             try {
                 const logoImg = new Image();
                 logoImg.src = '/html/images/logo.png';
@@ -128,7 +126,7 @@
                 console.warn("Logó betöltése a PDF-hez sikertelen.");
             }
 
-            // Cégnév a fejlécben
+            // Cegnev
             doc.setTextColor(...cyan);
             doc.setFontSize(26);
             doc.setFont("helvetica", "bold");
@@ -139,19 +137,19 @@
             doc.setFont("helvetica", "normal");
             doc.text("Informatikai Cikkek es Hardverek", 45, 29);
 
-            // Vonal a fejléc alatt
+            // Vonal
             doc.setDrawColor(...purple);
             doc.setLineWidth(1);
             doc.line(10, 45, 200, 45);
 
-            // Szekciók címei
+            // Sections
             doc.setTextColor(30, 30, 30);
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
             doc.text("Vásárolt termékek:", 15, 60);
             doc.text("Vásárló adatai:", 120, 60);
 
-            // Vásárló adatai (Jobb oldal)
+            // customer
             doc.setFontSize(11);
             doc.setFont("helvetica", "normal");
             doc.setTextColor(80, 80, 80);
@@ -159,12 +157,12 @@
             doc.text(`Cím: ${cim}`, 120, 77);
             doc.text(`Email: ${email}`, 120, 84);
             
-            // Elválasztó vonal
+            // vonal
             doc.setDrawColor(200, 200, 200);
             doc.setLineWidth(0.5);
             doc.line(115, 62, 115, 100);
 
-            // Vásárolt termékek listázása (Bal oldal)
+            // products
             let startY = 70;
             doc.setTextColor(50, 50, 50);
             
@@ -183,7 +181,7 @@
                 startY += 8;
             });
 
-            // Végösszeg kiemelése
+            // Vegosszeg
             let summaryY = startY + 10;
             doc.setDrawColor(...cyan);
             doc.setLineWidth(0.5);
@@ -197,29 +195,30 @@
             doc.setTextColor(...purple); 
             doc.text(`${osszeg} Ft`, 105, summaryY, { align: "right" });
 
-            // Footer (Lábléc)
+            // Footer
             doc.setFontSize(10);
             doc.setFont("helvetica", "italic");
             doc.setTextColor(150, 150, 150);
             doc.text("Köszönjük a vásárlást! - OverClock Webshop", 105, 285, { align: "center" });
 
-            // Dokumentum mentése
+
             doc.save("OverClock_Szamla.pdf");
 
-            // Kosár ürítése sikeres tranzakció után
+            // kosar urites
             kosar = [];
             localStorage.removeItem("kosar");
             render();
             updateBadge();
             
             alert("Sikeres vásárlás! A számla letöltése megkezdődött.");
-            
-            // Opcionális: mezők kiürítése
             document.getElementById("nev").value = "";
             document.getElementById("cim").value = "";
             document.getElementById("email").value = "";
         }
     </script>
+
+
+    <!--SVGs-->
     <svg width="0" height="0" style="position: absolute;">
         <defs>
             <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -232,6 +231,9 @@
         </defs>
     </svg>
 
+
+
+    <!--FOOTER-->
     <div class="custom-footer">
         <p>Készítette: Barna Csaba és Patyi Szabolcs</p>
         <div class="social-icons">
@@ -249,21 +251,22 @@
             </a>
         </div>
     </div>
+
+
     <script>
+        // GSAP
         if (typeof gsap !== 'undefined') {
             gsap.registerPlugin(ScrollTrigger);
 
-            // Intelligens trigger: A főoldalon a "#products-section" (Legújabb hardverek h2 konténere) lesz a kiindulópont.
-            // A kosár és termék oldalakon a saját fő tartalmuk.
-            let triggerElement = document.querySelector("#products-section") || 
+            let triggerElement = document.querySelector("#products") || 
                                  document.querySelector(".basket-container") || 
                                  document.querySelector(".single-product-container");
 
             gsap.from(".social-icons a", {
                 scrollTrigger: {
                     trigger: triggerElement,
-                    start: "top top",      // CSAK AKKOR INDUL, amikor a "Legújabb hardverek" eléri az ablak tetejét!
-                    end: "+=300",          // 300px görgetés alatt zajlik le
+                    start: "top top", 
+                    end: "+=300",
                     scrub: 1
                 },
                 y: -40,

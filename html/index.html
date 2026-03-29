@@ -38,7 +38,7 @@
         }
         updateBadge();
 
-        // Kosárba gomb funkció
+        // Kosár button
         function kosarba(termekJSON) {
             let kosar = JSON.parse(localStorage.getItem("kosar")) || [];
             let termek = JSON.parse(decodeURIComponent(termekJSON));
@@ -48,7 +48,7 @@
             alert(termek.gyarto + " " + termek.model + " bekerült a kosárba!");
         }
 
-        // Adatok lekérése a 7024-es portról
+        // API call
         fetch("https://localhost:7024/api/termekek")
         .then(r => r.json())
         .then(adatok => {
@@ -56,11 +56,9 @@
             container.innerHTML = "";
 
             adatok.forEach(t => {
-                // Kép fix: a te API-d a t.kep mezőt használja
                 let kep = t.kep ? t.kep : "https://via.placeholder.com/300x200/1c3a5c/ffffff?text=Kép+hiányzik";
                 let termekJSONString = encodeURIComponent(JSON.stringify(t));
 
-                // JAVÍTVA: onclick a kártyára (átvisz), és stopPropagation a gombra (csak kosárba tesz)
                 container.innerHTML += `
                 <div class="product" onclick="window.location.href='termek.html?id=${t.id}'">
                     <img src="${kep}" alt="${t.model}">
@@ -77,24 +75,23 @@
         })
         .catch(err => console.log("Hiba a termékek betöltésekor:", err));
 
-        // GSAP Animációk
-        // GSAP Animációk
+        // GSAP
         function initGSAP() {
             gsap.registerPlugin(ScrollTrigger);
 
-            // A) Belépő animáció (oldalfrissítéskor)
+            // Page load
             let tlLoad = gsap.timeline();
             tlLoad.from([".hero-logo-circle", "#hero-logo"], { y: -300, opacity: 0, duration: 1.5, stagger: 0.15, ease: "back.out(1.5)" })
                   .from("#hero-title", { y: 50, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.8")
                   .from(".scroll-indicator", { opacity: 0, duration: 1 }, "-=0.2");
 
-            // B) Görgetős animáció (JAVÍTVA: Szinkronizált elhalványulás és hamarabbi trigger)
+            // Scroll animation
             let tlScroll = gsap.timeline({
                 scrollTrigger: {
                     trigger: "#hero",
                     start: "top top",
-                    end: "50% top", // JAVÍTVA: Hamarabb befejeződik az animáció, gyorsabb a reakció!
-                    scrub: 1,       // Finom, 1 másodperces simítás a görgő követésére
+                    end: "50% top",
+                    scrub: 1,
                     onLeave: () => {
                         gsap.set("#hero", { pointerEvents: "none" });
                         gsap.set("#products-section", { zIndex: 100 });
@@ -106,21 +103,21 @@
                 }
             });
 
-            // JAVÍTVA: A sorok végén lévő '0' paraméter biztosítja, hogy a logó, a cím és a háttér
-            // HAJSZÁLPONTOSAN EGYSZERRE kezdjen el halványulni és tágulni a görgetés hatására.
-            // Visszagörgetésnél ugyanígy egyszerre fognak újra megjelenni!
             tlScroll.to("#hero-logo-circle", { scale: 15, opacity: 0, ease: "power2.inOut" }, 0)
-                    .to("#hero-title", { opacity: 0, scale: 1.2, ease: "power2.inOut" }, 0) // A cím picit nő is elhalványulás közben, jobban egybeolvad a logóval
+                    .to("#hero-title", { opacity: 0, scale: 1.2, ease: "power2.inOut" }, 0)
                     .to("#hero", { backgroundColor: "rgba(18, 27, 43, 0)", ease: "none" }, 0);
 
-            // C) Termékek beúszása
+            // Product animation
             gsap.from(".product", {
                 scrollTrigger: { trigger: "#products-section", start: "top 75%", toggleActions: "play none none none" },
                 y: -100, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out"
             });
         }
     </script>
-    <svg width="0" height="0" style="position: absolute;">
+
+
+    <!--SVGs-->
+    <svg width="0" height="0" style="position: absolute;"> 
         <defs>
             <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
                 <stop offset="0%" style="stop-color: #f09433;" />
@@ -132,6 +129,7 @@
         </defs>
     </svg>
 
+    <!--FOOTER-->
     <div class="custom-footer">
         <p>Készítette: Barna Csaba és Patyi Szabolcs</p>
         <div class="social-icons">
@@ -151,24 +149,24 @@
         
     </div>
     <script>
+
+        // GSAP - Social icons scroll animation
         document.addEventListener("DOMContentLoaded", function() {
-            // Megkeressük a főoldali termék szekciót
             const productsSection = document.querySelector("#products");
             
-            // Az animáció CSAK akkor fut le, ha a GSAP betöltött ÉS a főoldalon vagyunk (létezik a productsSection)
             if (typeof gsap !== 'undefined' && productsSection) {
                 gsap.registerPlugin(ScrollTrigger);
 
                 gsap.from(".social-icons a", {
                     scrollTrigger: {
                         trigger: productsSection,
-                        start: "top 50%",      // PONTOSAN akkor indul, amikor a "#products-section" eléri a képernyő tetejét
-                        end: "+=300",          // A következő 300 pixelnyi görgetés alatt úsznak be az ikonok
-                        scrub: 1               // Finom görgetés-követés
+                        start: "top 50%",
+                        end: "+=300",
+                        scrub: 1
                     },
-                    y: -40,                    // Fentről esnek be
-                    opacity: 0,                // Átlátszóból
-                    stagger: 0.33,             // Egymás után késleltetve (GitHub -> Insta 1 -> Insta 2)
+                    y: -40,
+                    opacity: 0,
+                    stagger: 0.33,
                     ease: "power2.out"
                 });
             }

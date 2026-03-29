@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
 
-/* --- ALAPBEÁLLÍTÁSOK --- */
+/*BASIC*/
 * {
     margin: 0;
     padding: 0;
@@ -8,7 +8,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- EGYSÉGES MOZGÓ GRADIENT HÁTTÉR --- */
+/*GRADIENT*/
 body {
     color: #ffffff;
     overflow-x: hidden;
@@ -24,7 +24,7 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* --- NAVBAR --- */
+/*NAVBAR*/
 header {
     display: flex;
     justify-content: space-between;
@@ -40,6 +40,8 @@ header {
     z-index: 1000;
 }
 
+
+/* HERO TITLE*/
 header h2 {
     font-size: 24px;
     font-weight: 800;
@@ -53,7 +55,8 @@ header h2 {
     gap: 10px;
 }
 
-/* Kis logó a fejlécbe (ahogy a képen van) */
+
+/* LOGO*/
 header h2 img {
     width: 55px;
     height: 40px;
@@ -83,7 +86,7 @@ nav a:hover { color: #00b4d8; }
     box-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
 }
 
-/* --- HERO SZEKCIÓ (Főoldal) --- */
+/* --- HERO SECTION (index)*/
 .hero {
     height: 100vh;
     display: flex;
@@ -140,7 +143,7 @@ nav a:hover { color: #00b4d8; }
     60% { transform: translateY(-7px); }
 }
 
-/* --- TERMÉKEK SZEKCIÓ --- */
+/*PRODUCT SECTION*/
 .products-section {
     padding: 100px 50px;
     min-height: 100vh;
@@ -150,7 +153,6 @@ nav a:hover { color: #00b4d8; }
     z-index: 5; 
 }
 
-/* JAVÍTVA: 5 TERMÉK EGY SORBAN ÉS HELYES TÉRKÖZ FELÜL */
 .products {
     display: grid;
     grid-template-columns: repeat(5, 1fr); 
@@ -193,7 +195,7 @@ nav a:hover { color: #00b4d8; }
 .product p { font-size: 16px; color: #00b4d8; font-weight: 600; margin-bottom: 15px; }
 
 .product button, .single-cart-btn, .checkout-btn {
-background: linear-gradient(135deg, #9d4edd, #7b2cbf); /* Alap lila szín */
+background: linear-gradient(135deg, #9d4edd, #7b2cbf);
     color: white;
     border: none;
     font-weight: bold;
@@ -233,26 +235,27 @@ background: linear-gradient(135deg, #9d4edd, #7b2cbf); /* Alap lila szín */
     transition: all 0.6s ease;
 }
 
-/* Hover állapot: Színváltás kékre/ciánra, emelkedés és ragyogás */
 .product button:hover, .single-cart-btn:hover, .checkout-btn:hover {
     transform: translateY(-4px) scale(1.03);
     box-shadow: 0 10px 25px rgba(0, 180, 216, 0.6);
-    background: linear-gradient(135deg, #00b4d8, #0077b6); /* Ciánkék hover */
+    background: linear-gradient(135deg, #00b4d8, #0077b6);
 }
 
-/* Fénycsóva átsuhanása hover esetén */
+/* SHINE EFFECT*/
 .product button:hover::before, .single-cart-btn:hover::before, .checkout-btn:hover::before {
     left: 200%;
 }
 
 
-/* ========================================= */
-/* --- KOSÁR OLDAL PIXEL PONTOS DIZÁJN --- */
-/* ========================================= */
+
+
+
+
+/* KOSÁR page*/
 
 .basket-container {
     max-width: 700px;
-    margin: 120px auto 50px auto; /* A 120px letolja a navbar alá! */
+    margin: 120px auto 50px auto;
     padding: 20px;
 }
 
@@ -356,14 +359,17 @@ background: linear-gradient(135deg, #9d4edd, #7b2cbf); /* Alap lila szín */
     transform: translateY(-2px);
 }
 
-/* Gördítősáv */
+/*SCROLLBAR*/
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: #0a1128; }
 ::-webkit-scrollbar-thumb { background: #00b4d8; border-radius: 5px; }
 
-/* ========================================= */
-/* --- CUSTOM BAL ALSÓ FOOTER --- */
-/* ========================================= */
+
+
+
+
+
+/*FOOTER*/
 .custom-footer {
     position: fixed;
     bottom: 20px;
@@ -372,7 +378,7 @@ background: linear-gradient(135deg, #9d4edd, #7b2cbf); /* Alap lila szín */
     display: flex;
     flex-direction: column;
     gap: 12px;
-    pointer-events: auto; /* Hogy kattintható maradjon az ikon */
+    pointer-events: auto;
 }
 
 .custom-footer p {
@@ -389,7 +395,7 @@ background: linear-gradient(135deg, #9d4edd, #7b2cbf); /* Alap lila szín */
     align-items: center;
 }
 
-/* Szürke alap ikonok */
+/*SVGs*/
 .social-icons a svg {
     fill: rgba(255, 255, 255, 0.4); 
     transition: all 0.3s ease;
@@ -397,16 +403,16 @@ background: linear-gradient(135deg, #9d4edd, #7b2cbf); /* Alap lila szín */
     height: 24px;
 }
 
-/* GitHub hover: Lila lesz és megnő */
+/* Github on hover */
 .github-icon:hover svg {
     fill: #9d4edd; 
     transform: scale(1.2);
     filter: drop-shadow(0px 0px 8px rgba(157, 78, 221, 0.6));
 }
 
-/* Instagram hover: Színátmenetes lesz és megnő */
+/* Instagram on hover*/
 .ig-icon:hover svg {
-    fill: url(#ig-grad); /* SVG gradiensre hivatkozik */
+    fill: url(#ig-grad); /* SVG gradient */
     transform: scale(1.2);
     filter: drop-shadow(0px 0px 8px rgba(220, 39, 67, 0.6));
 }

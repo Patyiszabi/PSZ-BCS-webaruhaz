@@ -19,25 +19,23 @@
     <div id="termek-kontener"></div>
 
     <script>
-        // Kosár badge frissítése
         function updateBadge() {
             let kosar = JSON.parse(localStorage.getItem("kosar")) || [];
             document.getElementById("badge").innerText = kosar.length;
         }
         updateBadge();
 
-        // URL paraméterből azonosító kinyerése
         const params = new URLSearchParams(window.location.search);
         const id = params.get("id");
 
-        // Termék adatainak lekérése
+        // API call
         fetch("https://localhost:7024/api/termekek/" + id)
         .then(r => r.json())
         .then(t => {
-            // Kép hibakezelése, ha nincs kép a DB-ben
+            // Error handling
             let kep = t.kep ? t.kep : "https://via.placeholder.com/600x400/1c3a5c/ffffff?text=Kép+hiányzik";
 
-            // Az új HTML struktúra felépítése
+            // HTML structure
             document.getElementById("termek-kontener").innerHTML = `
                 <div class="single-product-container">
                     <img src="${kep}" alt="${t.model}" class="single-product-image">
@@ -60,7 +58,6 @@
                 </div>
             `;
 
-            // Eltároljuk a terméket globálisan a gombhoz
             window.termek = t;
         })
         .catch(err => {
@@ -68,7 +65,7 @@
             document.getElementById("termek-kontener").innerHTML = "<h2 style='text-align:center; margin-top: 150px;'>A termék nem található.</h2>";
         });
 
-        // Kosárba gomb funkciója
+        // Kosárba
         function kosarba() {
             if(!window.termek) return;
 
@@ -78,10 +75,11 @@
 
             updateBadge();
 
-            // Egy pici UX javítás: alert helyett finomabb lenne egy toast, de egyelőre marad az alert ahogy kérted, csak egyértelműbb szöveggel.
             alert(window.termek.gyarto + " " + window.termek.model + " sikeresen a kosárba került!");
         }
     </script>
+
+    <!--SVGs-->
     <svg width="0" height="0" style="position: absolute;">
         <defs>
             <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -94,6 +92,8 @@
         </defs>
     </svg>
 
+
+    <!--FOOTER-->
     <div class="custom-footer">
         <p>Készítette: Barna Csaba és Patyi Szabolcs</p>
         <div class="social-icons">
@@ -112,20 +112,20 @@
         </div>
     </div>
     <script>
+
+        // GSAP - Social icons scroll animation
         if (typeof gsap !== 'undefined') {
             gsap.registerPlugin(ScrollTrigger);
 
-            // Intelligens trigger: A főoldalon a "#products-section" (Legújabb hardverek h2 konténere) lesz a kiindulópont.
-            // A kosár és termék oldalakon a saját fő tartalmuk.
-            let triggerElement = document.querySelector("#products-section") || 
+            let triggerElement = document.querySelector("#products") || 
                                  document.querySelector(".basket-container") || 
                                  document.querySelector(".single-product-container");
 
             gsap.from(".social-icons a", {
                 scrollTrigger: {
                     trigger: triggerElement,
-                    start: "top top",      // CSAK AKKOR INDUL, amikor a "Legújabb hardverek" eléri az ablak tetejét!
-                    end: "+=300",          // 300px görgetés alatt zajlik le
+                    start: "top top",
+                    end: "+=300",
                     scrub: 1
                 },
                 y: -40,
