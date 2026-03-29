@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Termék - OverClock</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
 
@@ -29,7 +30,7 @@
         const id = params.get("id");
 
         // API call
-        fetch("https://webshop-backend-api.onrender.com/api/termekek" + id)
+        fetch("https://webshop-backend-api.onrender.com/api/termekek/" + id)
         .then(r => r.json())
         .then(t => {
             // Error handling

@@ -6,6 +6,7 @@
     <title>Kosár - OverClock</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
 
@@ -67,7 +68,7 @@
 
         function torol(index) {
             let torolt = kosar[index];
-            fetch("https://localhost:7024/api/termekek/" + torolt.id, {
+            fetch("https://webshop-backend-api.onrender.com/api/termekek" + torolt.id, {
                 method: "POST" 
             }).catch(e => console.log(e));
 
@@ -96,7 +97,7 @@
             let osszeg = kosar.reduce((sum, t) => sum + t.ar, 0);
 
             await Promise.all(kosar.map(t =>
-                fetch("https://webshop-backend-api.onrender.com/api/termekek" + t.id, {
+                fetch("https://webshop-backend-api.onrender.com/api/termekek/" + t.id, {
                 method: "DELETE"
                 }).catch(e => console.log(e))
             ));
@@ -204,10 +205,11 @@
 
             doc.save("OverClock_Szamla.pdf");
 
-            // kosar urites
+            // sikeres vasarlas utan
             kosar = [];
             localStorage.removeItem("kosar");
             render();
+            window.location.href = "index.html";
             updateBadge();
             
             alert("Sikeres vásárlás! A számla letöltése megkezdődött.");
