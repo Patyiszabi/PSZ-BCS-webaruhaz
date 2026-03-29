@@ -30,6 +30,7 @@ Frontend	Netlify	overclockwebshop.netlify.app
 Backend API	Render	webshop-backend-api.onrender.com
 
 Adatbázis	Clever Cloud Managed MySQL	Távoli hozzáféréssel
+
 🚀 Technológiai Stack
 
 Cloud & Infrastructure
@@ -68,7 +69,9 @@ MySQL Connector
 
 
 👥 Fejlesztők
+
 Barna Csaba
+
 Patyi Szabolcs
 
 
