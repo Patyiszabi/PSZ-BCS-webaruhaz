@@ -63,6 +63,7 @@ Adatbázis	Clever Cloud Managed MySQL	Távoli hozzáféréssel
 
 
 📂 Projekt Felépítése
+
 ├── Controllers/        # Backend végpontok (GET, DELETE)
 
 ├── images/             # Grafikai elemek, termékfotók
