@@ -49,6 +49,8 @@ Backend
 C# / ASP.NET Core
 Dapper (Micro-ORM)
 MySQL Connector
+
+
 🛠️ Főbb Funkciók
 ⚡ Élő Adatbázis Kapcsolat – minden betöltéskor frissülő terméklista
 📦 Valós Idejű Készletkezelés – megvásárolt termék azonnali eltávolítása
